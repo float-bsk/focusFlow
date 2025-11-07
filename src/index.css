@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@import "tailwindcss";
+
+:root {
+  font-family:system-ui, Avenir, Helvetica, Arial, sans-serif ;
+  line-height: 1.5;
+  font-weight: 400;
+  /* color-scheme: light dark; */
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale; 
+  margin: 0 auto;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+body { 
+  display: block;
+  min-height: 100vh;
+  max-width: 1440px;
+  width:100%;
+  position: relative;
+  color:inherit;
+  background:inherit;
+}

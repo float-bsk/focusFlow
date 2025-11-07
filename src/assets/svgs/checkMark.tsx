@@ -1,0 +1,49 @@
+// CheckIcon.tsx
+import React from "react";
+
+const CheckIcon: React.FC<React.SVGProps<SVGSVGElement>> = (props) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    xmlnsXlink="http://www.w3.org/1999/xlink"
+    version="1.1"
+    width="256"
+    height="256"
+    viewBox="0 0 256 256"
+    xmlSpace="preserve"
+    {...props}
+  >
+    <g
+      style={{
+        stroke: "none",
+        strokeWidth: 0,
+        strokeDasharray: "none",
+        strokeLinecap: "butt",
+        strokeLinejoin: "miter",
+        strokeMiterlimit: 10,
+        fill: "none",
+        fillRule: "nonzero",
+        opacity: 1,
+      }}
+      transform="translate(1.4065934065934016 1.4065934065934016) scale(2.81 2.81)"
+    >
+      <path
+        d="M 33 78 c -2.303 0 -4.606 -0.879 -6.364 -2.636 l -24 -24 c -3.515 -3.515 -3.515 -9.213 0 -12.728 c 3.515 -3.515 9.213 -3.515 12.728 0 L 33 56.272 l 41.636 -41.636 c 3.516 -3.515 9.213 -3.515 12.729 0 c 3.515 3.515 3.515 9.213 0 12.728 l -48 48 C 37.606 77.121 35.303 78 33 78 z"
+        style={{
+          stroke: "none",
+          strokeWidth: 1,
+          strokeDasharray: "none",
+          strokeLinecap: "butt",
+          strokeLinejoin: "miter",
+          strokeMiterlimit: 10,
+          fill: "rgb(57,166,209)",
+          fillRule: "nonzero",
+          opacity: 1,
+        }}
+        transform="matrix(1 0 0 1 0 0)"
+        strokeLinecap="round"
+      />
+    </g>
+  </svg>
+);
+
+export default CheckIcon;
