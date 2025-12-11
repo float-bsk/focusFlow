@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+@import "tailwindcss";
+
+/* button{
+  border-width: 0.1rem;
+  padding:0.1rem 0.3rem;
+}
+button:hover{
+  cursor: pointer;
+} */
+[type="checkbox"]{
+  width: 2rem;
+}
+
+
+  /* .tick-everysecond {
+    animation: tick 1s steps(1, end) infinite; 
+    transform-origin: left center;
+  }
+
+  @keyframes tick {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+} */
+
+
+
+.hand {
+  position: absolute;
+  width: 90px;
+  height: 4px;
+  background: black;
+  top: 50%;
+  left: 50%;
+  
+  transform-origin: left center;   /* pivot at left */
+  animation: rotate-hand 60s linear infinite;
+}
+
+@keyframes rotate-hand {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
