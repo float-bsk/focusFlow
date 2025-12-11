@@ -2,18 +2,33 @@
 
 @import "tailwindcss";
 
-button{
-  border-width: 0.1rem;
-  padding:0.3rem 0.6rem;
-}
+
 button:hover{
   cursor: pointer;
-  font-weight: 500;
-  
+  font-weight: 500;  
  transition: font-weight 0.1s ease;
 }
 
+
 @layer utilities {
+  .danger{
+    border: 0.1rem;
+    border-color: crimson;
+    text-align: center;
+  }
+
+  .morning{
+    border:0.1rem;
+    border-color:rgb(36, 36, 175);
+    text-align: center;
+  }
+
+  .nature{
+    border:0.1rem;
+    border-color:forestgreen;
+    text-align: center;
+  }
+
   .tick-everysecond {
     animation: tick 60s steps(360, end) infinite; 
     transform-origin: left center;

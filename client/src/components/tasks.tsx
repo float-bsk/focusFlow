@@ -44,11 +44,11 @@ export default function Tasks() {
         setTasklist(data as Task[]);
     }, []);
     //show Error Dialog
-    function handleOpenDialog(){
+    function handleOpenDialog() {
         dialogRef.current?.showModal();
     }
 
-    function handleCloseDialog(){
+    function handleCloseDialog() {
         dialogRef.current?.close();
     }
 
@@ -77,7 +77,7 @@ export default function Tasks() {
     // user adds a new task - store the task into task array
     function handleSubmit(e: FormEvent) {
         e.preventDefault();
-        if(focusOn && focusTimer.seconds !== 0){
+        if (focusOn && focusTimer.seconds !== 0) {
             setErrorAction("Close the current open timer!");
             handleOpenDialog();
             return;
@@ -100,7 +100,7 @@ export default function Tasks() {
 
     // Helper function to change the task to completed
     function handleComplete(taskid: string) {
-        if(focusOn && taskid !== taskFocused?.id){            
+        if (focusOn && taskid !== taskFocused?.id) {
             setErrorAction(prev => {
                 prev = "Stop the current focused task timer"
                 return prev
@@ -151,11 +151,16 @@ export default function Tasks() {
     let timer = null;
 
     function handleFocus(taskid: string) {
-        if (intervalId) {           
+        if (focusOn && taskid !== taskFocused?.id) {
+            setErrorAction(prev => {
+                prev = "Stop the current focused task timer"
+                return prev
+            })
+            handleOpenDialog();
+            return;
+        }
+        if (intervalId) {
             clearInterval(intervalId);
-        }        
-        if (focusOn) {
-          return;
         }
         const focusTask = tasklist.find(task => task.id === taskid);
         const updateTaskList = tasklist.slice();
@@ -178,7 +183,7 @@ export default function Tasks() {
 
         //start focus timer
         if (!intervalId) {
-            timer = setInterval(() =>  counter() , 1000);
+            timer = setInterval(() => counter(), 1000);
             setIntervalId(timer);
         }
     }
@@ -192,7 +197,7 @@ export default function Tasks() {
         for (let index = 0; index < updateTaskArray.length; index++) {
             const thisElement = updateTaskArray[index];
             if (thisElement.id === taskid) {
-                thisElement.focusTime += timeElapsed;                
+                thisElement.focusTime += timeElapsed;
             }
         }
         setfocusTimer({ minutes: 0, seconds: 0 });
@@ -241,12 +246,19 @@ export default function Tasks() {
         }
     }
 
+    function formatFocusTimer(focusTime: number) {
+        const minutes = Math.trunc(focusTime / 60);
+        const seconds = focusTime % 60;
+        return { minutes, seconds };
+    }
+
     return (
-        <>
+        <div className="max-w-md p-2 md:p-8 bg-gray-50 md:border md:border-gray-200 rounded-md">
             {/* Render Create Task Component */}
-            <div >
+            <div className="py-4">
                 <form
                     onSubmit={handleSubmit}
+                    className="flex flex-col md:flex-row gap-x-2"
                 >
                     <input
                         id="task"
@@ -258,15 +270,15 @@ export default function Tasks() {
                         onInput={validate}
                         required
                         placeholder="Task title"
-                        className={`
-                            bg-gray-200 m-2 p-2 
+                        className={` bg-gray-200 p-2 
                             ${duplicateName ? "outline-red-500" : "focus-within:outline-blue-500"}                            
                             `}
                     />
                     <button
+                    className="border border-blue-600 text-indigo-950 font-semibold px-2 rounded-sm"
                         type="submit"
                     >
-                        Create Task
+                        Add Task
                     </button>
                 </form>
             </div>
@@ -274,51 +286,39 @@ export default function Tasks() {
             <div className="">
                 {
                     tasklist.length > 0 ?
-                        <p >Tasks for Today:</p> :
-                        <p >No Tasks:</p>
+                        <p className="my-2">Tasks List:</p> :
+                        <p className="my-2">No Tasks:</p>
                 }
 
-                <ul className="grid grid-cols-1 space-y-4" >
+                <ul className="grid grid-cols-1 mb-20 space-y-4 text-sm md:text-base text-gray-800" >
                     {
-                        tasklist?.map((task) =>
-                            task.completed ?
-                                <li key={task.id} className="flex gap-2 items-baseline">
-                                    <span className="text-xl font-semibold text-gray-900">{task.title}</span>
-                                    <span>Time to complete: {task.focusTime}</span>
-                                    <CheckCompleteIcon width={32} height={32} />
-                                    <button onClick={() => handleDeleteTask(task.id)}>Remove</button>
-
+                        tasklist?.map((task) => {
+                            const { minutes, seconds } = formatFocusTimer(task.focusTime);
+                            if (task.completed)
+                                return <li key={task.id}
+                                    className="flex flex-col items-baseline relative bg-blue-100 border px-2 border-blue-200 rounded-md">
+                                    <span className="font-semibold">
+                                    {task.title}</span>
+                                    <span className="  ">Duration: {minutes} mins {seconds} secs.</span>
+                                    <div className=" flex gap-x-1.5"><span>Status: Complete</span> <span><CheckCompleteIcon width={24} height={24} /></span></div>
+                                    <button
+                                    className="text-red-900 danger "
+                                    onClick={() => handleDeleteTask(task.id)}>clear task</button>
                                 </li>
-                                :
+                            else
                                 // Tast List
-                                <li key={task.id} className="flex gap-2 items-baseline">
-                                    <span className="font-semibold text-gray-900"> {task.title} </span>
-                                    <span>{"|"}</span>
-                                    <span>Time Focused : {task.focusTime}</span>
+                                return <li key={task.id} className="flex flex-col items-baseline  bg-zinc-100 border px-2 border-yellow-100 rounded-md">
+                                    <span className="font-semibold first-letter:uppercase normal-case"> {task.title} </span>
+                                   
+                                    <span>Time spent  {minutes} mins {seconds} secs</span>
                                     {/* Task title */}
                                     {/* Task Controls panel */}
-                                    <div className="flex flex-wrap gap-2 items-baseline">
-                                        {/* Focus Timer Button */}
-                                        {/* <div>
-                                            {
-                                                focusOn && taskFocused?.id === task.id ?
-                                                <div>
-                                                    <p>You are focusing on this task {focusTimer.minutes}:{focusTimer.seconds}</p>
-                                                    <MediaControls onStop={() => handleStopFocus(task.id)} />
-                                                </div>
-                                                    :
-                                                    <button
-                                                        onClick={() => handleFocus(task.id)}
-                                                    >
-                                                        <span >Focus</span>
-                                                    </button>
-                                            }
-                                        </div> */}
-                                        {/* Select Task using checkbox */}
-                                        {
+                                    <div className="flex flex-wrap gap-2 items-center">
+                                                                              
+                                        {/* Select Task using checkbox */}                                        {
                                             focusOn && taskFocused?.id === task.id ?
                                                 <>
-                                                    <p>You are focusing on this task {focusTimer.minutes}:{focusTimer.seconds}</p>
+                                                    <div className="flex gap-x-2"><span>You are focusing on this task </span> <div className="bg-indigo-600 rounded-sm text-sm w-12 text-center  text-white font-semibold">{focusTimer.minutes}:{focusTimer.seconds}</div></div>
                                                     <MediaControls onStop={() => handleStopFocus(task.id)} />
                                                 </>
                                                 :
@@ -333,22 +333,23 @@ export default function Tasks() {
                                                     />
                                                     <button
                                                         onClick={() => handleFocus(task.id)}
+                                                        className="text-sky-900"
                                                     >
                                                         <span >Focus</span>
                                                     </button>
 
                                                     {/* Delete Task */}
                                                     <button
-                                                    disabled={focusOn}
-                                                        onClick={() =>
-                                                            handleDeleteTask(task.id)}
+                                                    className="text-rose-900"
+                                                        disabled={focusOn}
+                                                        onClick={() => handleDeleteTask(task.id)}
                                                     >
                                                         Delete
                                                     </button>
 
                                                     {/* Complete Task */}
                                                     <button
-                                                    
+                                                    className="text-emerald-900"
                                                         onClick={() => handleComplete(task.id)}
                                                     >Done</button>
                                                 </>
@@ -356,25 +357,30 @@ export default function Tasks() {
                                         }
                                     </div>
                                 </li>
+                        }
                         )
                     }
                 </ul>
                 {
                     // Render a floating style component which allows to complete and delete tasks to delete multiple tasks at a time
                     checkedList.length > 0 ?
-                        <div>
+                        <div className="bg-gray-200 w-64 p-2 text-gray-900 flex flex-col gap-2 fixed my-2 bottom-2 left-1/2 right-1/2 -translate-x-1/2">
                             <p >Selected Tasks: {checkedList.length}</p>
-                            <div >
+                            <hr/>
+                            <div className="flex gap-x-1">
                                 <button
                                     // onClick={todo}
+                                    className="grow"
                                     onClick={() => setCheckedList([])}
                                 >Close</button>
                                 <button
                                     // onClick={todo}
+                                    className="grow text-blue-900"
                                     onClick={handleBatchComplete}
                                 >Done</button>
                                 <button
                                     // onClick={todo}
+                                    className="grow text-rose-900"
                                     onClick={handleBatchDelete}
                                 >Remove</button>
                             </div>
@@ -386,7 +392,7 @@ export default function Tasks() {
                 <p>{errorAction}</p>
                 <button onClick={handleCloseDialog}>Ok</button>
             </dialog>
-        </>
+        </div>
     )
 }
 
@@ -397,8 +403,8 @@ const MediaControls = ({ onStop }: {
         <div>
             {/* <PlayCircleIcon className="w-8 h-8" />
             <PauseCircleIcon className="w-8 h-8" /> */}
-            <button onClick={onStop} className="bg-rose-700 text-white hover:bg-rose-900">
-               <span>Stop</span>
+            <button onClick={onStop} className="text-red-700 hover:text-rose-800">
+                <span>Stop</span>
             </button>
         </div>
     </>
